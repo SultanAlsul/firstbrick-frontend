@@ -11,7 +11,7 @@ export default function Projects() {
         const data = await getProjects();
         setProjects(data);
       } catch (error) {
-        console.log("Error fetching projects");
+        console.log("Error loading projects");
       } finally {
         setLoading(false);
       }
@@ -20,23 +20,28 @@ export default function Projects() {
     fetchProjects();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading projects...</p>;
+  }
 
   return (
     <div>
       <h1>Projects</h1>
 
-      {projects.length === 0 && <p>No projects available</p>}
-
-      {projects.map((project) => (
-        <div key={project.id} style={{ border: "1px solid white", margin: 10 }}>
-          <h3>{project.title}</h3>
-          <p>Location: {project.location}</p>
-          <p>Total: {project.totalPrice}</p>
-          <p>Raised: {project.currentAmount}</p>
-          <p>Status: {project.status}</p>
-        </div>
-      ))}
+      {projects.length === 0 ? (
+        <p>No projects available</p>
+      ) : (
+        projects.map((project) => (
+          <div key={project.id} style={{ border: "1px solid gray", marginBottom: 12, padding: 12 }}>
+            <h3>{project.title}</h3>
+            <p>Location: {project.location}</p>
+            <p>Total Price: {project.totalPrice}</p>
+            <p>Current Amount: {project.currentAmount}</p>
+            <p>Minimum Investment: {project.minimumInvestment}</p>
+            <p>Status: {project.status}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 }
