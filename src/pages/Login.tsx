@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 ADD THIS
 import { login } from "../api/auth";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate(); // 👈 ADD THIS
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,6 +17,8 @@ export default function Login() {
       const data = await login(username, password);
       localStorage.setItem("token", data.token);
       setMessage("Login successful");
+
+      navigate("/projects"); // 👈 THIS IS THE IMPORTANT LINE
     } catch (error: any) {
       console.log("ERROR:", error);
 
