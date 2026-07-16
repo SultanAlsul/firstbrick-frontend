@@ -1,13 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 ADD THIS
+import { useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
+
+import {
+  Box,
+  Button,
+  Input,
+  Heading,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // 👈 ADD THIS
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,48 +25,56 @@ export default function Login() {
     try {
       const data = await login(username, password);
       localStorage.setItem("token", data.token);
-      setMessage("Login successful");
 
-      navigate("/projects"); // 👈 THIS IS THE IMPORTANT LINE
+      navigate("/projects");
     } catch (error: any) {
-      console.log("ERROR:", error);
-
-      if (error.response) {
-        console.log("STATUS:", error.response.status);
-        console.log("DATA:", error.response.data);
-
-        if (error.response.status === 401) {
-          setMessage("Wrong username or password");
-        } else {
-          setMessage(`Server error: ${error.response.status}`);
-        }
+      if (error.response?.status === 401) {
+        setMessage("Wrong username or password");
       } else {
-        setMessage("Cannot reach backend (check URL or server)");
+        setMessage("Login failed");
       }
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h1>Login</h1>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+    >
+      <Box
+        as="form"
+        onSubmit={handleLogin}
+        p={6}
+        borderWidth={1}
+        borderRadius="lg"
+        boxShadow="lg"
+        width="300px"
+      >
+        <VStack gap={4}>
+          <Heading size="md">Login</Heading>
 
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+          <Input
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-      <button type="submit">Login</button>
+          <Button type="submit" colorScheme="blue" width="full">
+            Login
+          </Button>
 
-      {message && <p>{message}</p>}
-    </form>
+          {message && <Text color="red.500">{message}</Text>}
+        </VStack>
+      </Box>
+    </Box>
   );
 }
