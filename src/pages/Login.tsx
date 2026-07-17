@@ -1,78 +1,95 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
-
 import {
   Box,
   Button,
-  Input,
+  Field,
   Heading,
+  Input,
   VStack,
-  Text,
 } from "@chakra-ui/react";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-
-  const navigate = useNavigate();
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage("");
-
-    try {
-      const data = await login(username, password);
-      localStorage.setItem("token", data.token);
-
-      navigate("/projects");
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        setMessage("Wrong username or password");
-      } else {
-        setMessage("Login failed");
-      }
-    }
-  };
-
   return (
     <Box
+      h="100vh"
       display="flex"
       justifyContent="center"
       alignItems="center"
-      height="100vh"
+      bg="gray.950"
     >
       <Box
-        as="form"
-        onSubmit={handleLogin}
-        p={6}
-        borderWidth={1}
-        borderRadius="lg"
-        boxShadow="lg"
-        width="300px"
+        bg="blue.900"
+        p={8}
+        rounded="xl"
+        shadow="2xl"
+        w="400px"
       >
-        <VStack gap={4}>
-          <Heading size="md">Login</Heading>
+        <VStack gap={5}>
+          <VStack gap={2}>
+        <Heading
+          size="2xl"
+          color="white"
+          textAlign="center"
+          fontWeight="bold"
+        letterSpacing="wide"
+           >
+         FirstBrick
+        </Heading>
 
-          <Input
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+       <Heading
+       size="md"
+       color="gray.300"
+       fontWeight="medium"
+       > 
+        Login
+       </Heading>
+       </VStack>
 
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <Field.Root>
+            <Field.Label color="gray.200">
+              Username
+            </Field.Label>
 
-          <Button type="submit" colorScheme="blue" width="full">
+            <Input
+              placeholder="Enter your username"
+              color="white"
+              bg="blue.950"
+              borderColor="gray.600"
+              _placeholder={{
+                color: "gray.400",
+              }}
+              _focusVisible={{
+                borderColor: "blue.400",
+              }}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label color="gray.200">
+              Password
+            </Field.Label>
+
+            <Input
+              type="password"
+              placeholder="Enter your password"
+              color="white"
+              bg="blue.950"
+              borderColor="gray.600"
+              _placeholder={{
+                color: "gray.400",
+              }}
+              _focusVisible={{
+                borderColor: "blue.400",
+              }}
+            />
+          </Field.Root>
+
+          <Button
+            colorPalette="blue"
+            w="full"
+            size="lg"
+          >
             Login
           </Button>
-
-          {message && <Text color="red.500">{message}</Text>}
         </VStack>
       </Box>
     </Box>
